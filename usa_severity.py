@@ -212,25 +212,12 @@ with tab2:
 
         st.plotly_chart(map_fig)
 
-        # Map nr.2
-        fig2 = px.scatter_mapbox(data,
-                                  lat='Start_Lat', 
-                                  lon='Start_Lng', 
-                                  hover_name='City', 
-                                  hover_data=['State', 'Severity'],
-                                  color='Severity',
-                                  color_continuous_scale=px.colors.sequential.Rainbow,
-                                  size_max=10,
-                                  zoom=3)
-        fig2.update_layout(mapbox_style='open-street-map', title='Accident Locations')
-        st.plotly_chart(fig2)
+         # Map nr.2
+        data = data.rename(columns={'Start_Lat': 'lat', 'Start_Lng': 'lon'})
+        st.map(data[['lat', 'lon']])
 
         # Map nr.3
         st.image('plots/severity_by_map.jpg')
-
-        # Map nr.4
-        data = data.rename(columns={'Start_Lat': 'lat', 'Start_Lng': 'lon'})
-        st.map(data[['lat', 'lon']])
 
     if selection == 'Time Analysis':
         st.image('plots/accident_count_time.jpg')
