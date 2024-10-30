@@ -220,6 +220,9 @@ with tab2:
         fig2.update_layout(mapbox_style='open-street-map', title='Accident Locations')
         st.plotly_chart(fig2)
 
+        # Map nr.3
+        st.image('plots/severity_by_map.jpg')
+
     if selection == 'Time Analysis':
         st.image('plots/accident_count_time.jpg')
         st.image('plots/accident_count_by_hour.jpg')
