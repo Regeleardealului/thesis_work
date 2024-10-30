@@ -197,15 +197,20 @@ with tab2:
     if selection == 'Map Visualization':
         # Map nr.1
         state_accident_counts = pd.value_counts(data['State'])
-        fig1 = go.Figure(data=go.Choropleth(
+        map_fig = go.Figure(data=go.Choropleth(
             locations=state_accident_counts.index,
+            z=state_accident_counts.values.astype(float),
             locationmode='USA-states',
-            z=state_accident_counts.values,
-            colorscale='YlOrRd',
-            colorbar_title='Accident Count',
+            colorscale='Viridis', 
+            colorbar_title="Number of Accidents",
         ))
-        fig1.update_layout(title_text='Accidents by State', geo_scope='usa')
-        st.plotly_chart(fig1)
+
+        map_fig.update_layout(
+            title_text='Accidents by State over the years',
+            geo_scope='usa', 
+        )
+
+        st.plotly_chart(map_fig)
 
         # Map nr.2
         fig2 = px.scatter_mapbox(data,
