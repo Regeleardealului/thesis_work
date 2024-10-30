@@ -228,17 +228,22 @@ with tab2:
         st.image('plots/accident_count_by_season.jpg')
     
     if selection == 'Dimension Reduction':
-        pca = PCA(n_components=2)
-        pca_data = pca.fit_transform(df)
-        pca_df = pd.DataFrame(data=pca_data, columns=['PC1', 'PC2'])
         
-        # Scatter plot for PCA
-        fig_pca = plt.figure(figsize=(10, 6))
-        sns.scatterplot(data=pca_df, x='PC1', y='PC2', hue=df['Severity'], palette='Set1', alpha=0.5)
-        plt.title('PCA of Accident Data')
-        plt.xlabel('Principal Component 1')
-        plt.ylabel('Principal Component 2')
-        st.pyplot(fig_pca)  
+        X_features = df.loc[:, df.columns != 'Severity']
+        target = df['Severity']
+
+        pca = PCA(n_components=8)
+        principalComponents = pca.fit_transform(X_features)
+        
+        # Create a DataFrame for PCA components
+        reduced_df = pd.DataFrame(data=principalComponents, columns=[f'PCA{i+1}' for i in range(8)])
+        reduced_df['Severity'] = target.values
+        
+        st.write("PCA Completed. The DataFrame with PCA components is displayed below:")
+        st.dataframe(reduced_df)     
+
+        st.image('plots/umap.jpg')
+        st.image('plots/pca.jpg')  
 
 with tab3:
     st.header("Model Comparison")
