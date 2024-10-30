@@ -6,74 +6,86 @@ import plotly.express as px
 import plotly.graph_objs as go
 import pickle
 import time 
+import zipfile
+import os
 from sklearn.decomposition import PCA
 
+# Unzipping uploaded files
+def unzip_file(zip_file, extract_to):
+    with zipfile.ZipFile(zip_file, 'r') as z:
+        z.extractall(extract_to)
+
+# Unzip cleaned_usa_accidents.zip and df.zip if they exist
+if not os.path.exists('cleaned_usa_accidents.csv'):
+    unzip_file('cleaned_usa_accidents.zip', '.')
+if not os.path.exists('df.csv'):
+    unzip_file('df.zip', '.')
+
+# Set Streamlit page config
 st.set_page_config(
     page_title='Car Accident Severity Predictor',
-    page_icon='C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/emergency-sign.png',
+    page_icon='emergency-sign.png',
     layout='wide'
 ) 
 
 # Loading the dataset
-data = pd.read_csv('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/cleaned_usa_accidents.csv')
+data = pd.read_csv('cleaned_usa_accidents.csv')
 data['Start_Time'] = pd.to_datetime(data['Start_Time'])
 
-df = pd.read_csv('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/df.csv')
+df = pd.read_csv('df.csv')
 
 # Classification Report Loading section
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/lr_classification_report.pkl', 'rb') as f:
+with open('pickle_files/lr_classification_report.pkl', 'rb') as f:
     classification_rep_lr = pickle.load(f)
 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/rf_classification_report.pkl', 'rb') as f:
+with open('pickle_files/rf_classification_report.pkl', 'rb') as f:
     classification_rep_rf = pickle.load(f)
 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/bayes_classification_report.pkl', 'rb') as f:
+with open('pickle_files/bayes_classification_report.pkl', 'rb') as f:
     classification_rep_bayes = pickle.load(f)
 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/classification_report_nn.pkl', 'rb') as f:
+with open('pickle_files/classification_report_nn.pkl', 'rb') as f:
     classification_rep_nn = pickle.load(f)
 
 # Confusion Matrix Loading section
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/lr_confusion_matrix.pkl', 'rb') as f:
+with open('pickle_files/lr_confusion_matrix.pkl', 'rb') as f:
     conf_matrix_lr = pickle.load(f)
 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/rf_confusion_matrix.pkl', 'rb') as f:
+with open('pickle_files/rf_confusion_matrix.pkl', 'rb') as f:
     conf_matrix_rf = pickle.load(f)
 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/bayes_confusion_matrix.pkl', 'rb') as f:
+with open('pickle_files/bayes_confusion_matrix.pkl', 'rb') as f:
     conf_matrix_bayes = pickle.load(f)
 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/confusion_matrix_nn.pkl', 'rb') as f:
+with open('pickle_files/confusion_matrix_nn.pkl', 'rb') as f:
     conf_matrix_nn = pickle.load(f)
 
 # TOP 10 Features Loading section
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/feature_importance_lr.pkl', 'rb') as f:
+with open('pickle_files/feature_importance_lr.pkl', 'rb') as f:
     top_features_df_lr = pickle.load(f)
 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/feature_importance_rf.pkl', 'rb') as f:
+with open('pickle_files/feature_importance_rf.pkl', 'rb') as f:
     top_features_df_rf = pickle.load(f)
 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/feature_importance_bayes.pkl', 'rb') as f:
+with open('pickle_files/feature_importance_bayes.pkl', 'rb') as f:
     top_features_df_bayes = pickle.load(f)
 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/feature_importance_nn.pkl', 'rb') as f:
+with open('pickle_files/feature_importance_nn.pkl', 'rb') as f:
     top_features_df_nn = pickle.load(f)
 
 # Loading the encoding Random Forest saved model 
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/random_forest_classifier.pkl', 'rb') as f:
+with open('pickle_files/random_forest_classifier.pkl', 'rb') as f:
     model = pickle.load(f)
 
 # Load frequency encoding mappings
-with open('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/pickle_files/freq_encoding_mappings.pkl', 'rb') as f:
+with open('pickle_files/freq_encoding_mappings.pkl', 'rb') as f:
     frequency_mappings = pickle.load(f)
 
 # Define the function for applying frequency encoding
 def apply_frequency_encoding(input_df, mappings, columns):
     for column in columns:
-        # Map the frequency encoding using the pre-saved mappings
         input_df[column] = input_df[column].map(mappings[column])
-        # Handle unseen categories
-        input_df[column].fillna(0, inplace=True)  # Default value for unseen categories
+        input_df[column].fillna(0, inplace=True)  # Handle unseen categories
     return input_df
 
 # -----------------------------------------------------------------------------------------------------------------------------------
@@ -92,20 +104,19 @@ with tab1:
 
     st.markdown("<hr>", unsafe_allow_html=True)
 
-
-    st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/spearman_corr_matrix.png')
+    st.image('plots/spearman_corr_matrix.png')
 
 with tab2:
     st.header("Exploratory Data Analysis")
     selection = st.radio(label='Select Visualization Type', options=['Univariate-Bivariate Analysis', 'Map Visualization', 'Time Analysis', 'Dimension Reduction'])  
 
     if selection == 'Univariate-Bivariate Analysis':
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/accident_by_severity.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/proportion_ny_rest_usa.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/sunrise_sunset.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/poi.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/top5_weather.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/street_accident.jpg')
+        st.image('plots/accident_by_severity.jpg')
+        st.image('plots/proportion_ny_rest_usa.jpg')
+        st.image('plots/sunrise_sunset.jpg')
+        st.image('plots/poi.jpg')
+        st.image('plots/top5_weather.jpg')
+        st.image('plots/street_accident.jpg')
     
         # Treemap
         state_accidents = data['State'].value_counts().reset_index()
@@ -178,69 +189,66 @@ with tab2:
         
         st.plotly_chart(fig_county)
 
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/ecdf_distance.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/ecdf_duration.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/rainy.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/foggy.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/cloudy.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/snowy.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/windy.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/dusty.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/thunderstorm.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/pressure.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/wind_speed.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/temperature.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/humidity.jpg')
+        st.image('plots/ecdf_distance.jpg')
+        st.image('plots/ecdf_duration.jpg')
+        st.image('plots/rainy.jpg')
+        st.image('plots/foggy.jpg')
+        st.image('plots/cloudy.jpg')
+        st.image('plots/snowy.jpg')
+        st.image('plots/windy.jpg')
+        st.image('plots/dusty.jpg')
+        st.image('plots/thunderstorm.jpg')
+        st.image('plots/pressure.jpg')
+        st.image('plots/wind_speed.jpg')
+        st.image('plots/temperature.jpg')
+        st.image('plots/humidity.jpg')
     
     if selection == 'Map Visualization':
         # Map nr.1
         state_accident_counts = pd.value_counts(data['State'])
-        map_fig = go.Figure(data=go.Choropleth(
+        fig1 = go.Figure(data=go.Choropleth(
             locations=state_accident_counts.index,
-            z=state_accident_counts.values.astype(float),
             locationmode='USA-states',
-            colorscale='Viridis', 
-            colorbar_title="Number of Accidents",
+            z=state_accident_counts.values,
+            colorscale='YlOrRd',
+            colorbar_title='Accident Count',
         ))
-
-        map_fig.update_layout(
-            title_text='Accidents by State over the years',
-            geo_scope='usa', 
-        )
-
-        st.plotly_chart(map_fig)
+        fig1.update_layout(title_text='Accidents by State', geo_scope='usa')
+        st.plotly_chart(fig1)
 
         # Map nr.2
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/severity_by_map.jpg')
-
-        # Map nr.3
-        data = data.rename(columns={'Start_Lat': 'lat', 'Start_Lng': 'lon'})
-        st.map(data[['lat', 'lon']])
+        fig2 = px.scatter_mapbox(data,
+                                  lat='Start_Lat', 
+                                  lon='Start_Lng', 
+                                  hover_name='City', 
+                                  hover_data=['State', 'Severity'],
+                                  color='Severity',
+                                  color_continuous_scale=px.colors.sequential.Rainbow,
+                                  size_max=10,
+                                  zoom=3)
+        fig2.update_layout(mapbox_style='open-street-map', title='Accident Locations')
+        st.plotly_chart(fig2)
 
     if selection == 'Time Analysis':
-        
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/severity_by_day.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/severity_by_hour.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/severity_by_month.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/severity_by_year.jpg')
-
+        st.image('plots/accident_count_time.jpg')
+        st.image('plots/accident_count_by_hour.jpg')
+        st.image('plots/accident_count_by_month.jpg')
+        st.image('plots/accident_count_by_day.jpg')
+        st.image('plots/accident_count_by_weekday.jpg')
+        st.image('plots/accident_count_by_season.jpg')
+    
     if selection == 'Dimension Reduction':
-
-        X_features = df.loc[:, df.columns != 'Severity']
-        target = df['Severity']
-
-        pca = PCA(n_components=8)
-        principalComponents = pca.fit_transform(X_features)
+        pca = PCA(n_components=2)
+        pca_data = pca.fit_transform(df)
+        pca_df = pd.DataFrame(data=pca_data, columns=['PC1', 'PC2'])
         
-        # Create a DataFrame for PCA components
-        reduced_df = pd.DataFrame(data=principalComponents, columns=[f'PCA{i+1}' for i in range(8)])
-        reduced_df['Severity'] = target.values
-        
-        st.write("PCA Completed. The DataFrame with PCA components is displayed below:")
-        st.dataframe(reduced_df)     
-
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/umap.jpg')
-        st.image('C:/Users/sogor/OneDrive/Documents/szakdoga/USA_accidents_deployment/plots/pca.jpg')   
+        # Scatter plot for PCA
+        fig_pca = plt.figure(figsize=(10, 6))
+        sns.scatterplot(data=pca_df, x='PC1', y='PC2', hue=df['Severity'], palette='Set1', alpha=0.5)
+        plt.title('PCA of Accident Data')
+        plt.xlabel('Principal Component 1')
+        plt.ylabel('Principal Component 2')
+        st.pyplot(fig_pca)  
 
 with tab3:
     st.header("Model Comparison")
