@@ -220,13 +220,11 @@ with tab2:
         st.image('plots/severity_by_map.jpg')
 
     if selection == 'Time Analysis':
-        st.image('plots/accident_count_time.jpg')
-        st.image('plots/accident_count_by_hour.jpg')
-        st.image('plots/accident_count_by_month.jpg')
-        st.image('plots/accident_count_by_day.jpg')
-        st.image('plots/accident_count_by_weekday.jpg')
-        st.image('plots/accident_count_by_season.jpg')
-    
+        st.image('plots/severity_by_day.jpg')
+        st.image('plots/severity_by_hour.jpg')
+        st.image('plots/severity_by_month.jpg')
+        st.image('plots/severity_by_year.jpg')
+       
     if selection == 'Dimension Reduction':
         
         X_features = df.loc[:, df.columns != 'Severity']
