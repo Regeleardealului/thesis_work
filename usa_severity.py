@@ -9,6 +9,7 @@ import time
 import zipfile
 import os
 from sklearn.decomposition import PCA
+import gzip
 
 # Unzipping uploaded files
 def unzip_file(zip_file, extract_to):
