@@ -74,7 +74,7 @@ with open('pickle_files/feature_importance_nn.pkl', 'rb') as f:
     top_features_df_nn = pickle.load(f)
 
 # Loading the encoding Random Forest saved model 
-with open('pickle_files/random_forest_classifier.pkl', 'rb') as f:
+with gzip.open('pickle_files/compressed_random_forest_classifier.pkl.gz', 'rb') as f:
     model = pickle.load(f)
 
 # Load frequency encoding mappings
