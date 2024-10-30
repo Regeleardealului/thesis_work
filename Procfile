@@ -1,0 +1,1 @@
+web: streamlit run usa_severity.py
