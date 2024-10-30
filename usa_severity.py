@@ -228,6 +228,10 @@ with tab2:
         # Map nr.3
         st.image('plots/severity_by_map.jpg')
 
+        # Map nr.4
+        data = data.rename(columns={'Start_Lat': 'lat', 'Start_Lng': 'lon'})
+        st.map(data[['lat', 'lon']])
+
     if selection == 'Time Analysis':
         st.image('plots/accident_count_time.jpg')
         st.image('plots/accident_count_by_hour.jpg')
