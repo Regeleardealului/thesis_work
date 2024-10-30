@@ -36,51 +36,41 @@ data['Start_Time'] = pd.to_datetime(data['Start_Time'])
 df = pd.read_csv('df.csv')
 
 # Classification Report Loading section
-with open('pickle_files/lr_classification_report.pkl', 'rb') as f:
-    classification_rep_lr = pickle.load(f)
+def load_pickle(file_path):
+    try:
+        with open(file_path, 'rb') as f:
+            return pickle.load(f)
+    except Exception as e:
+        st.error(f"Error loading {file_path}: {e}")
+        return None
 
-with open('pickle_files/rf_classification_report.pkl', 'rb') as f:
-    classification_rep_rf = pickle.load(f)
-
-with open('pickle_files/bayes_classification_report.pkl', 'rb') as f:
-    classification_rep_bayes = pickle.load(f)
-
-with open('pickle_files/classification_report_nn.pkl', 'rb') as f:
-    classification_rep_nn = pickle.load(f)
+classification_rep_lr = load_pickle('pickle_files/lr_classification_report.pkl')
+classification_rep_rf = load_pickle('pickle_files/rf_classification_report.pkl')
+classification_rep_bayes = load_pickle('pickle_files/bayes_classification_report.pkl')
+classification_rep_nn = load_pickle('pickle_files/classification_report_nn.pkl')
 
 # Confusion Matrix Loading section
-with open('pickle_files/lr_confusion_matrix.pkl', 'rb') as f:
-    conf_matrix_lr = pickle.load(f)
-
-with open('pickle_files/rf_confusion_matrix.pkl', 'rb') as f:
-    conf_matrix_rf = pickle.load(f)
-
-with open('pickle_files/bayes_confusion_matrix.pkl', 'rb') as f:
-    conf_matrix_bayes = pickle.load(f)
-
-with open('pickle_files/confusion_matrix_nn.pkl', 'rb') as f:
-    conf_matrix_nn = pickle.load(f)
+conf_matrix_lr = load_pickle('pickle_files/lr_confusion_matrix.pkl')
+conf_matrix_rf = load_pickle('pickle_files/rf_confusion_matrix.pkl')
+conf_matrix_bayes = load_pickle('pickle_files/bayes_confusion_matrix.pkl')
+conf_matrix_nn = load_pickle('pickle_files/confusion_matrix_nn.pkl')
 
 # TOP 10 Features Loading section
-with open('pickle_files/feature_importance_lr.pkl', 'rb') as f:
-    top_features_df_lr = pickle.load(f)
-
-with open('pickle_files/feature_importance_rf.pkl', 'rb') as f:
-    top_features_df_rf = pickle.load(f)
-
-with open('pickle_files/feature_importance_bayes.pkl', 'rb') as f:
-    top_features_df_bayes = pickle.load(f)
-
-with open('pickle_files/feature_importance_nn.pkl', 'rb') as f:
-    top_features_df_nn = pickle.load(f)
+top_features_df_lr = load_pickle('pickle_files/feature_importance_lr.pkl')
+top_features_df_rf = load_pickle('pickle_files/feature_importance_rf.pkl')
+top_features_df_bayes = load_pickle('pickle_files/feature_importance_bayes.pkl')
+top_features_df_nn = load_pickle('pickle_files/feature_importance_nn.pkl')
 
 # Loading the encoding Random Forest saved model 
-with gzip.open('pickle_files/compressed_random_forest_classifier.pkl.gz', 'rb') as f:
-    model = pickle.load(f)
+try:
+    with gzip.open('pickle_files/compressed_random_forest_classifier.pkl.gz', 'rb') as f:
+        model = pickle.load(f)
+except Exception as e:
+    st.error(f"Error loading compressed model: {e}")
+    model = None
 
 # Load frequency encoding mappings
-with open('pickle_files/freq_encoding_mappings.pkl', 'rb') as f:
-    frequency_mappings = pickle.load(f)
+frequency_mappings = load_pickle('pickle_files/freq_encoding_mappings.pkl')
 
 # Define the function for applying frequency encoding
 def apply_frequency_encoding(input_df, mappings, columns):
