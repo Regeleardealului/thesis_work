@@ -62,15 +62,15 @@ top_features_df_bayes = load_pickle('pickle_files/feature_importance_bayes.pkl')
 top_features_df_nn = load_pickle('pickle_files/feature_importance_nn.pkl')
 
 # Loading the encoding Random Forest saved model 
-# try:
-#     with gzip.open('pickle_files/compressed_random_forest_classifier.pkl.gz', 'rb') as f:
-#         model = pickle.load(f)
-# except Exception as e:
-#     st.error(f"Error loading compressed model: {e}")
-#     model = None
+try:
+    with gzip.open('pickle_files/compressed_random_forest_classifier.pkl.gz', 'rb') as f:
+        model = pickle.load(f)
+except Exception as e:
+    st.error(f"Error loading compressed model: {e}")
+    model = None
 
-with open('pickle_files/random_forest_classifier.pkl', 'rb') as f:
-    model = pickle.load(f)
+# with open('pickle_files/random_forest_classifier.pkl', 'rb') as f:
+#     model = pickle.load(f)
 
 # Load frequency encoding mappings
 frequency_mappings = load_pickle('pickle_files/freq_encoding_mappings.pkl')
