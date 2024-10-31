@@ -64,7 +64,7 @@ top_features_df_nn = load_pickle('pickle_files/feature_importance_nn.pkl')
 
 # Loading the encoding Random Forest saved model 
 try:
-    with gzip.open('pickle_files/compressed_random_forest_classifier.pkl.gz', 'rb') as f:
+    with open('pickle_files/random_forest_classifier.pkl', 'rb') as f:
         model = pickle.load(f)
 except Exception as e:
     st.error(f"Error loading compressed model: {e}")
