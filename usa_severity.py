@@ -35,7 +35,7 @@ data['Start_Time'] = pd.to_datetime(data['Start_Time'])
 
 df = pd.read_csv('df.csv')
 
-# Classification Report Loading section
+# Pickle Loading section
 def load_pickle(file_path):
     try:
         with open(file_path, 'rb') as f:
@@ -43,7 +43,7 @@ def load_pickle(file_path):
     except Exception as e:
         st.error(f"Error loading {file_path}: {e}")
         return None
-
+# CLassification Report Loading section  
 classification_rep_lr = load_pickle('pickle_files/lr_classification_report.pkl')
 classification_rep_rf = load_pickle('pickle_files/rf_classification_report.pkl')
 classification_rep_bayes = load_pickle('pickle_files/bayes_classification_report.pkl')
