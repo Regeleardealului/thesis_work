@@ -43,6 +43,7 @@ def load_pickle(file_path):
     except Exception as e:
         st.error(f"Error loading {file_path}: {e}")
         return None
+        
 # CLassification Report Loading section  
 classification_rep_lr = load_pickle('pickle_files/lr_classification_report.pkl')
 classification_rep_rf = load_pickle('pickle_files/rf_classification_report.pkl')
