@@ -1,7 +1,7 @@
 # USA Car Accident Severity Prediction Tool
 
 Welcome to my thesis project repository! This project focuses on analyzing and predicting the severity of car accidents across the USA based on a variety of factors. The goal was to gain insights into accident patterns and to develop a predictive tool that can estimate the severity of an accident based on several features.
-📊 Project Overview
+- 📊 Project Overview
 
   Dataset
     I used a large dataset containing over 7 million records of car accident data from across the USA. Each record includes a variety of features such as:
