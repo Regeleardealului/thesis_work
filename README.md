@@ -25,7 +25,7 @@ Welcome to my thesis project repository! This project focuses on analyzing and p
   3. Bernoulli Naive Bayes
   4. Neural Network
 
-  >>> After evaluating each model, Random Forest stood out with an accuracy score of 93%.
+  📝 After evaluating each model, Random Forest stood out with an accuracy score of 93%.
 
   **Model Validation:** I further validated the Random Forest model through cross-validation and analyzed its performance using the ROC-AUC metric. The model showed stable performance, reinforcing its reliability for predicting accident severity.
 
