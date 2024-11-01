@@ -193,7 +193,7 @@ with tab2:
     
     if selection == 'Map Visualization':
         # Map nr.1
-        state_accident_counts = pd.value_counts(data['State'])
+        state_accident_counts = data['State'].value_counts()
         map_fig = go.Figure(data=go.Choropleth(
             locations=state_accident_counts.index,
             z=state_accident_counts.values.astype(float),
