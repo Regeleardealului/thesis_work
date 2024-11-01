@@ -5,6 +5,7 @@ import seaborn as sns
 import plotly.express as px
 import plotly.graph_objs as go
 import pickle
+import joblib   
 import time 
 import zipfile
 import os
@@ -62,25 +63,17 @@ top_features_df_rf = load_pickle('pickle_files/feature_importance_rf.pkl')
 top_features_df_bayes = load_pickle('pickle_files/feature_importance_bayes.pkl')
 top_features_df_nn = load_pickle('pickle_files/feature_importance_nn.pkl')
 
-# Loading the encoding Random Forest saved model 
-# try:
-#     with open('pickle_files/random_forest_classifier.pkl', 'rb') as f:
-#         model = pickle.load(f)
-# except Exception as e:
-#     st.error(f"Error loading compressed model: {e}")
-#     model = None
+# Loading saved ML model
+model = joblib.load('pickle_files/RF_model.joblib')  
 
-with open('pickle_files/random_forest_classifier.pkl', 'rb') as f:
-    model = pickle.load(f)
-
-# Load frequency encoding mappings
+# Loading frequency encoding mappings
 frequency_mappings = load_pickle('pickle_files/freq_encoding_mappings.pkl')
 
 # Define the function for applying frequency encoding
 def apply_frequency_encoding(input_df, mappings, columns):
     for column in columns:
         input_df[column] = input_df[column].map(mappings[column])
-        input_df[column].fillna(0, inplace=True)  # Handle unseen categories
+        input_df[column].fillna(0, inplace=True)  # Handling unseen categories
     return input_df
 
 # -----------------------------------------------------------------------------------------------------------------------------------
@@ -396,7 +389,7 @@ with tab4:
                 time.sleep(0.03)
                 progress_bar.progress(percent_complete + 1)
 
-            # Make prediction on user input values using Random Forest
+            # Making prediction on user input values using Random Forest
             prediction = model.predict(input_data)
 
             if prediction == 1:
