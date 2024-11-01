@@ -92,7 +92,7 @@ with tab1:
 
     st.markdown("<hr>", unsafe_allow_html=True)
 
-    st.image('plots/spearman_corr_matrix.png')
+    st.image('plots/spearman_correlation_matrix.png')
 
 with tab2:
     st.header("Exploratory Data Analysis")
