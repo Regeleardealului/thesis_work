@@ -92,7 +92,8 @@ with tab1:
 
     st.markdown("<hr>", unsafe_allow_html=True)
 
-    st.image('plots/spearman_correlation_matrix.jpg')
+    with st.expander("Inspect Feature Correlations"):
+        st.image('plots/spearman_correlation_matrix.jpg')
 
 with tab2:
     st.header("Exploratory Data Analysis")
