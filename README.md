@@ -3,12 +3,11 @@
 Welcome to my thesis project repository! This project focuses on analyzing and predicting the severity of car accidents across the USA based on a variety of factors. The goal was to gain insights into accident patterns and to develop a predictive tool that can estimate the severity of an accident based on several features.
 - 📊 Project Overview
 
-  Dataset
-    I used a large dataset containing over 7 million records of car accident data from across the USA. Each record includes a variety of features such as:
-        Location: start latitude, start longitude, city, county, and street
-        Time: date and time of the accident
-        Severity level: ranging from 1 (least severe) to 4 (most severe)
-        Weather and Road Conditions: temperature, humidity, wind speed, weather conditions, etc.
+  **Dataset** I used a large dataset containing over 7 million records of car accident data from across the USA. Each record includes a variety of features such as:
+  1. Location: start latitude, start longitude, city, county, and street
+  2. Time: date and time of the accident
+  3. Severity level: ranging from 1 (least severe) to 4 (most severe)
+  4. Weather and Road Conditions: temperature, humidity, wind speed, weather conditions, etc.
 
   Sampling
     Due to the size of the dataset, I performed a stratified representative sampling to reduce it to 500,000 records. This made it more manageable for processing on my laptop, ensuring a balanced representation while keeping computational requirements in check.
